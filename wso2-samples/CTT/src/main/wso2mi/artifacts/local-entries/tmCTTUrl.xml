@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="tmCTTUrl" xmlns="http://ws.apache.org/ns/synapse">
+    <![CDATA[https://api.apigate.tm.com.my/t/tm.com.my/sit/chatbotwso2api/1.0.0/sba/sync/chatbot/wso2/ProactiveCTTCreation]]>
+</localEntry>

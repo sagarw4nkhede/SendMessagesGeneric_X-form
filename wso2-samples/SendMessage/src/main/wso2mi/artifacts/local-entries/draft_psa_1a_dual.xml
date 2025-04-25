@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="draft_psa_1a_dual" xmlns="http://ws.apache.org/ns/synapse"><![CDATA[
+[ { "type": "QUICK_REPLY", "parameter": "EN_PSA" }, { "type": "QUICK_REPLY", "parameter": "BH_PSA" } ]
+]]></localEntry>
+

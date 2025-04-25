@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<api context="/healthcheck" name="HealthCheck" xmlns="http://ws.apache.org/ns/synapse">
+    <resource methods="GET" uri-template="/infobip">
+        <inSequence>
+            <property name="infobipApi" expression="get-property('infobipApi')"></property>
+            <call>
+                <endpoint key="InfobipEndpoint" />
+            </call>
+            <property name="statusCode" expression="get-property('axis2', 'HTTP_SC')"/>
+            <filter source="get-property('statusCode')" regex="200">
+                <then>
+                    <payloadFactory media-type="json">
+                        <format>{"status": "SUCCESS", "message": "Infobip API is reachable"}</format>
+                        <args></args>
+                    </payloadFactory>
+                </then>
+                <else>
+                    <payloadFactory media-type="json">
+                        <format>{"status": "FAILED", "message": "Infobip API is not reachable"}</format>
+                        <args></args>
+                    </payloadFactory>
+                </else>
+            </filter>
+            
+            <respond />
+        </inSequence>
+    </resource>
+
+    <resource methods="GET" uri-template="/tm">
+        <inSequence>
+            <property name="tmApi" expression="get-property('tmApi')"></property>
+            <call>
+                <endpoint key="TmEndpoint" />
+            </call>
+            <property name="statusCode" expression="get-property('axis2', 'HTTP_SC')"/>
+            <filter source="get-property('statusCode')" regex="200">
+                <then>
+                    <payloadFactory media-type="json">
+                        <format>{"status": "SUCCESS", "message": "TM API is reachable"}</format>
+                        <args></args>
+                    </payloadFactory>
+                </then>
+                <else>
+                    <payloadFactory media-type="json">
+                        <format>{"status": "FAILED", "message": "TM API is not reachable"}</format>
+                        <args></args>
+                    </payloadFactory>
+                </else>
+            </filter>
+
+            <respond />
+        </inSequence>
+    </resource>
+
+    <resource methods="GET" uri-template="/database">
+        <inSequence>
+            <dblookup>
+                <connection>
+                    <pool>
+                        <driver>com.mysql.cj.jdbc.Driver</driver>
+                        <url>jdbc:mysql://localhost:3306/vkraftwso2?connectTimeout=3000</url>
+                        <user>wso2</user>
+                        <password>e33k4pCuZg==</password>
+                    </pool>
+                </connection>
+                <statement>
+                    <sql>SELECT 1</sql>
+                </statement>
+            </dblookup>
+            <payloadFactory media-type="json">
+                <format>{"status": "UP", "message": "Database is reachable"}</format>
+                <args></args>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+        <faultSequence>
+            <payloadFactory media-type="json">
+                <format>{"status": "DOWN", "message": "Database is unreachable"}</format>
+                <args></args>
+            </payloadFactory>
+            <respond/>
+        </faultSequence>
+    </resource>
+</api>
