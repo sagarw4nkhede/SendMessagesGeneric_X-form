@@ -17,7 +17,7 @@
             <sequence key="defaultSeq"/>
         </default>
     </switch> -->
-    <sequence key="templateDraftPSA_1a_dual"/>
+    <sequence key="dynamicTemplateMessageBuilder"/>
     <property name="infobipRequest" expression="json-eval($)" scope="default"/>
     <header name="Authorization" action="set" scope="transport" expression="get-property('infobipKey')"/>
     <call>
