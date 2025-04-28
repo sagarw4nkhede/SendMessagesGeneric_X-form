@@ -25,7 +25,7 @@
                                     },
                                     "language": "$7"
                                 },
-                                "callbackData": "Callback data infobip to kraft",
+                                "callbackData": "Callback data from Infobip to Kraft: messageId = $3, templateName = $4",
                                 "notifyUrl": "$8"
                             }
                         ]
@@ -65,7 +65,7 @@
                                     },
                                     "language": "$6"
                                 },
-                                "callbackData": "Callback data infobip to kraft",
+                                "callbackData": "Callback data from Infobip to Kraft: messageId = $3, templateName = $4",
                                 "notifyUrl": "$7"
                             }
                         ]

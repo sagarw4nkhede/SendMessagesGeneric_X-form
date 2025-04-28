@@ -25,20 +25,15 @@
             <property name="messageId" expression="json-eval($.messageId)" scope="default" />
             <property name="messageId" expression="json-eval($.messageId)" scope="transport" />
 
-            <!-- Log the buttons to verify -->
             <log>
+                
                 <property name="buttonsFromLocalEntry" expression="get-property('buttons')"/>
                 <property name="templateProp--" expression="get-property('templateProp')"/>
                 <property name="buttons-------" expression="get-property('buttons')"/>
                 <property name="requestPayload--------" expression="get-property('requestPayload')"/>
             </log>
 
-            <!-- <property name="to" expression="$ctx:requestPayload/send_to" scope="default"/>
-            <property name="templateName" expression="$ctx:requestPayload/templateName" scope="default"/>
-            <property name="msg" expression="$ctx:requestPayload/msg" scope="default"/>
-            <property name="messageId" expression="$ctx:requestPayload/msg_id" scope="default"/>
-            <property name="messageId" expression="$ctx:requestPayload/msg_id" scope="transport" type="STRING"/> -->
-            <property name="notifyUrl" value="https://wso2api.devwso2.kraftsoftwaresolutions.com/sendmessages/1.0.0/callback"/>
+            <property name="notifyUrl" value="https://mytestdomain.loca.lt/callback"/>
             <property name="isButtonsPresent" expression="boolean(string-length(get-property('buttons')) > 0)" />
             <log>
                 <property name="draft_psa_1a_dual-------" expression="get-property('draft_psa_1a_dual')"/>
