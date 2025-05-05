@@ -8,30 +8,37 @@
     <property name="status" expression="json-eval($.results[0].status.groupName)" scope="default" type="STRING" />
     <property name="statusDescription" expression="json-eval($.results[0].status.description)" scope="default" type="STRING" />
     <property name="errorDescription" expression="json-eval($.results[0].error.description)" scope="default" type="STRING" />
+    <property name="callbackData" expression="json-eval($.results[0].callbackData)" scope="default" type="STRING"/>
+    <property name="templateName" expression="fn:substring-after(get-property('callbackData'), 'templateName = ')" scope="default" type="STRING"/>
+    <log level="full">
+        <property name="callbackData-------" expression="get-property('callbackData')"></property>
+        <property name="templateName-------" expression="get-property('templateName')"></property>
+    </log>
     <call>
         <endpoint key="logCallbackAPI" />
     </call>
     <filter xpath="get-property('doneAt')">
         <then>
             <payloadFactory media-type="json">
-                <format> 
+                <format>
                     {
                         "to": "$1",
                         "messageId": "$2",
                         "doneAt": "$3",
                         "sentAt": "$4",
                         "status": "$5",
-                        "description": "$6"
-                        "callbackData": "Callback from Infobip to Kraft"
+                        "description": "$6",
+                        "templateName": "$7"
                     }
                 </format>
                 <args>
-                    <arg expression="get-property('to')"></arg>
-                    <arg expression="get-property('messageId')"></arg>
-                    <arg expression="get-property('doneAt')"></arg>
-                    <arg expression="get-property('sentAt')"></arg>
-                    <arg expression="get-property('status')"></arg>
-                    <arg expression="fn:concat(get-property('statusDescription'), ' - ', get-property('errorDescription'))"></arg>
+                    <arg expression="get-property('to')"/>
+                    <arg expression="get-property('messageId')"/>
+                    <arg expression="get-property('doneAt')"/>
+                    <arg expression="get-property('sentAt')"/>
+                    <arg expression="get-property('status')"/>
+                    <arg expression="fn:concat(get-property('statusDescription'), ' - ', get-property('errorDescription'))"/>
+                    <arg expression="get-property('templateName')"/>
                 </args>
             </payloadFactory>
         </then>
@@ -44,8 +51,8 @@
                         "sentAt": "$3",
                         "seenAt": "$4",
                         "status": "SEEN",
-                        "description": "Message has been seen by the recipient."
-                        "callbackData": "Callback from Infobip to Kraft"
+                        "description": "Message seen by recipient",
+                        "templateName": "$5"
                     }
                 </format>
                 <args>
@@ -53,6 +60,7 @@
                     <arg expression="get-property('messageId')"></arg>
                     <arg expression="get-property('sentAt')"></arg>
                     <arg expression="get-property('seenAt')"></arg>
+                    <arg expression="get-property('templateName')"/>
                 </args>
             </payloadFactory>
         </else>

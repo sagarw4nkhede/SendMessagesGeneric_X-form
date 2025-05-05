@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sequence name="processSeq" trace="disable" onError="onErrorSeq" xmlns="http://ws.apache.org/ns/synapse">
-    <!-- <switch source="get-property('templateName')">
-        <case regex="draft_psa_1a">
-            <sequence key="templateDraftPSA_1a"/>
-        </case>
-        <case regex="draft_psa_1a_dual">
-            <sequence key="templateDraftPSA_1a_dual"/>
-        </case>
-        <case regex="psa_7_bh">
-            <sequence key="templatePSA_7_BH"/>
-        </case>
-        <case regex="psa_7_2_bh">
-            <sequence key="templatePSA_7_2_BH"/>
-        </case>
-        <default>
-            <sequence key="defaultSeq"/>
-        </default>
-    </switch> -->
-    <sequence key="templateDraftPSA_1a_dual"/>
+    <sequence key="dynamicTemplateMessageBuilder"/>
     <property name="infobipRequest" expression="json-eval($)" scope="default"/>
     <header name="Authorization" action="set" scope="transport" expression="get-property('infobipKey')"/>
     <call>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence name="dynamicTemplateMessageBuilder" xmlns="http://ws.apache.org/ns/synapse">
+
+    <filter xpath="get-property('templateName') = 'kci6_1'">
+        <then>
+            <script language="js"><![CDATA[
+                var phArray = mc.getProperty("placeholders");
+                var jsonArray = JSON.parse(phArray);
+                mc.setProperty("ph1", jsonArray[0]);
+                mc.setProperty("ph2", jsonArray[1]);
+            ]]>
+            </script>
+            <log>
+                <property name="placeholder10" expression="get-property('ph1')"/>
+                <property name="placeholder2" expression="get-property('ph2')"/>
+                <property name="then----------" value="inside then kci6_1"></property>
+                <property name="placeholder1------" expression="json-eval($.placeholders[0])" scope="default"/>
+                <property name="placeholder2" expression="json-eval($.placeholders[1])" scope="default"/>
+            </log>
+            <payloadFactory media-type="json" template-type="default">
+                <format>
+                    {
+                        "messages": [
+                            {
+                                "from": "$1",
+                                "to": "$2",
+                                "messageId": "$3",
+                                "content": {
+                                    "templateName": "$4",
+                                    "templateData": {
+                                        "body": {
+                                            "placeholders": $5
+                                        },
+                                        "buttons": [{
+                                            "type": "QUICK_REPLY",
+                                            "parameter": "Re-Appointment|EN|$8|$9"
+                                        }]
+                                    },
+                                    "language": "$6"
+                                },
+                                "callbackData": "Callback data from Infobip to Kraft: messageId = $3, templateName = $4",
+                                "notifyUrl": "$7"
+                            }
+                        ]
+                    }
+                </format>
+                <args>
+                    <arg expression="get-property('from')" />
+                    <arg expression="get-property('to')" />
+                    <arg expression="get-property('messageId')" />
+                    <arg expression="get-property('templateName')" />
+                    <arg expression="get-property('placeholders')" />
+                    <arg expression="get-property('language')" />
+                    <arg expression="get-property('notifyUrl')" />
+                    <arg expression="get-property('ph1')" />
+                    <arg expression="get-property('ph2')" />
+                </args>
+            </payloadFactory>
+            <log level="full">
+                <property name="final payload to Infobip" value="asas"></property>
+            </log>
+        </then>
+        <else>
+            <filter xpath="get-property('isButtonsPresent') = 'true'">
+                <then>
+                    <!-- Payload with buttons -->
+                    <log>
+                        <property name="then----------" value="-block"></property>
+                    </log>
+                    <payloadFactory media-type="json" template-type="default">
+                        <format>
+                            {
+                                "messages": [
+                                    {
+                                        "from": "$1",
+                                        "to": "$2",
+                                        "messageId": "$3",
+                                        "content": {
+                                            "templateName": "$4",
+                                            "templateData": {
+                                                "body": {
+                                                    "placeholders": $5
+                                                },
+                                                "buttons": $6
+                                            },
+                                            "language": "$7"
+                                        },
+                                        "callbackData": "Callback data from Infobip to Kraft: messageId = $3, templateName = $4",
+                                        "notifyUrl": "$8"
+                                    }
+                                ]
+                            }
+                        </format>
+                        <args>
+                            <arg expression="get-property('from')" />
+                            <arg expression="get-property('to')" />
+                            <arg expression="get-property('messageId')" />
+                            <arg expression="get-property('templateName')" />
+                            <arg expression="get-property('placeholders')" />
+                            <arg expression="get-property('buttons')" />
+                            <arg expression="get-property('language')" />
+                            <arg expression="get-property('notifyUrl')" />
+                        </args>
+                    </payloadFactory>
+                </then>
+                <else>
+                    <!-- Payload without buttons -->
+                    <log>
+                        <property name="else----------" value="-block"></property>
+                    </log>
+                    <payloadFactory media-type="json" template-type="default">
+                        <format>
+                            {
+                                "messages": [
+                                    {
+                                        "from": "$1",
+                                        "to": "$2",
+                                        "messageId": "$3",
+                                        "content": {
+                                            "templateName": "$4",
+                                            "templateData": {
+                                                "body": {
+                                                    "placeholders": $5
+                                                }
+                                            },
+                                            "language": "$6"
+                                        },
+                                        "callbackData": "Callback data from Infobip to Kraft: messageId = $3, templateName = $4",
+                                        "notifyUrl": "$7"
+                                    }
+                                ]
+                            }
+                        </format>
+                        <args>
+                            <arg expression="get-property('from')" />
+                            <arg expression="get-property('to')" />
+                            <arg expression="get-property('messageId')" />
+                            <arg expression="get-property('templateName')" />
+                            <arg expression="get-property('placeholders')" />
+                            <arg expression="get-property('language')" />
+                            <arg expression="get-property('notifyUrl')" />
+                        </args>
+                    </payloadFactory>
+                </else>
+            </filter>
+        </else>
+    </filter>
+
+    
+    <log level="full">
+        <property name="Extracted Data-22-------" expression="get-property('placeholders')" />
+        <property name="Extracted buttons--------" expression="get-property('buttons')" />
+    </log>
+</sequence>
