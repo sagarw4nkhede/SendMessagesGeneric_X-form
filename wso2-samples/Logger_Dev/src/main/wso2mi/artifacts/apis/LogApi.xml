@@ -159,9 +159,9 @@
                 <source type="body"/>
                 <target type="property" property="fullPayload"/>
             </enrich>
-            <property name="messageId" expression="json-eval($.results[0].messageId)" scope="default" type="STRING"/>
-            <property name="type" type="STRING" value="Callback from Infobip to Kraft"/>
-            <property name="integrationNo" type="STRING" value="I1125"/>
+            <property name="messageId" expression="get-property('transport','messageId')"/>
+            <property name="type" expression="get-property('transport','type')"/>
+            <property name="integrationNo" expression="get-property('transport','integrationNo')"/>
             <payloadFactory media-type="xml">
                 <format>
                     <logRequest>

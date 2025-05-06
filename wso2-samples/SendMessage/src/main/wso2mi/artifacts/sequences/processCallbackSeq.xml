@@ -10,10 +10,9 @@
     <property name="errorDescription" expression="json-eval($.results[0].error.description)" scope="default" type="STRING" />
     <property name="callbackData" expression="json-eval($.results[0].callbackData)" scope="default" type="STRING"/>
     <property name="templateName" expression="fn:substring-after(get-property('callbackData'), 'templateName = ')" scope="default" type="STRING"/>
-    <log level="full">
-        <property name="callbackData-------" expression="get-property('callbackData')"></property>
-        <property name="templateName-------" expression="get-property('templateName')"></property>
-    </log>
+    <property name="integrationNo" scope="transport" type="STRING" value="I1125"/>
+    <property name="type" scope="transport" type="STRING" value="Callback from Infobip to Kraft"/>
+    <property name="messageId" scope="transport" type="STRING" expression="get-property('messageId')"/>
     <call>
         <endpoint key="logCallbackAPI" />
     </call>
@@ -65,5 +64,11 @@
             </payloadFactory>
         </else>
     </filter>
+    <property name="integrationNo" scope="transport" type="STRING" value="I1125"/>
+    <property name="messageId" scope="transport" type="STRING" expression="get-property('messageId')"/>
+    <property name="type" scope="transport" type="STRING" value="Callback response from Kraft to TM"/>
+    <call>
+        <endpoint key="logCallbackAPI" />
+    </call>
     <respond />
 </sequence>

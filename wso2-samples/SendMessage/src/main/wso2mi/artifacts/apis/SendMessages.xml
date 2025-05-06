@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <api context="/" name="SendMessages" xmlns="http://ws.apache.org/ns/synapse">
-    <resource methods="POST" uri-template="/blast/message" faultSequence="onErrorSequence">
+    <resource methods="POST" uri-template="/send/message" faultSequence="onErrorSequence">
         <inSequence>
             <log level="full">
                 <property name="INFO" value="Starting integration processing..."/>
