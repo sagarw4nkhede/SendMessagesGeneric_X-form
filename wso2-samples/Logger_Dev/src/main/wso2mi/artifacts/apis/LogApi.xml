@@ -6,15 +6,8 @@
                 <source type="body"/>
                 <target type="property" property="fullPayload"/>
             </enrich>
-            <filter xpath="get-property('transport', 'type') = 'Incoming request from TM to Kraft' or get-property('transport', 'type') = 'Request from Kraft to Infobip' or get-property('transport', 'type') = 'Response from Infobip to Kraft'">
-                <then>
-                    <property name="messageId" expression="get-property('transport','messageId')"/>
-                </then>
-                <else>
-                    <property name="messageId" expression="json-eval($.messageId)" scope="default" type="STRING"/>
-                </else>
-            </filter>
-            <property name="Body" expression="json-eval($.)" scope="default"/>
+            <property name="messageId" expression="get-property('transport','messageId')"/>
+            <property name="messageBody" expression="json-eval($.)" scope="default"/>
             <property name="Exception" expression="get-property('transport','exception')"/>
             <property name="error" expression="get-property('transport','error')"/>
             <property name="errorDetails" expression="get-property('transport','errorDetails')"/>
@@ -22,7 +15,7 @@
             <property name="errorMsgId" expression="get-property('transport','errorMsgId')"/>
             <property name="requestId" expression="get-property('transport','requestId')"/>
             <property name="integrationNo" expression="get-property('transport','integrationNo')"/>
-            <property name="Type" expression="get-property('transport','type')"/>
+            <property name="requestType" expression="get-property('transport','type')"/>
             <property name="exception" expression="get-property('Exception')"/>
             <property name="integrationNo" expression="get-property('integrationNo')"/>
             <property name="error" expression="get-property('error')"/>
@@ -113,7 +106,7 @@
                         <args>
                             <arg expression="get-property('integrationNo')" evaluator="xml"/>
                             <arg expression="get-property('fullPayload')" evaluator="xml"/>
-                            <arg expression="get-property('Type')" evaluator="xml"/>
+                            <arg expression="get-property('requestType')" evaluator="xml"/>
                             <arg expression="get-property('errorDetails')" evaluator="xml"/>
                             <arg expression="get-property('errorStatusCode')" evaluator="xml"/>
                             <arg expression="get-property('errorMsgId')"/>
@@ -137,8 +130,8 @@
                         </format>
                         <args>
                             <arg expression="get-property('integrationNo')" evaluator="xml"/>
-                            <arg expression="get-property('Body')"/>
-                            <arg expression="get-property('Type')" evaluator="xml"/>
+                            <arg expression="get-property('messageBody')"/>
+                            <arg expression="get-property('requestType')" evaluator="xml"/>
                             <arg expression="get-property('exception')" evaluator="xml"/>
                             <arg expression="get-property('Error Code')" evaluator="xml"/>
                             <arg expression="get-property('messageId')"/>
@@ -160,7 +153,7 @@
                 <target type="property" property="fullPayload"/>
             </enrich>
             <property name="messageId" expression="get-property('transport','messageId')"/>
-            <property name="type" expression="get-property('transport','type')"/>
+            <property name="requestType" expression="get-property('transport','type')"/>
             <property name="integrationNo" expression="get-property('transport','integrationNo')"/>
             <payloadFactory media-type="xml">
                 <format>
@@ -174,7 +167,7 @@
                 <args>
                     <arg expression="get-property('integrationNo')"/>
                     <arg expression="get-property('fullPayload')"/>
-                    <arg expression="get-property('type')"/>
+                    <arg expression="get-property('requestType')"/>
                     <arg expression="get-property('messageId')"/>
                 </args>
             </payloadFactory>

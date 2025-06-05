@@ -79,6 +79,7 @@
     </switch>
     <property name="integrationNo" scope="transport" type="STRING" value="I1125"/>
     <property name="type" scope="transport" type="STRING" value="Response from Kraft to TM"/>
+    <property name="messageId" scope="transport" type="STRING" expression="json-eval($.messageId)"/>
     <call>
         <endpoint key="LogAPI"/>
     </call>

@@ -2,7 +2,7 @@
     <description/>
     <config id="log">
         <property name="driverClassName">com.mysql.cj.jdbc.Driver</property>
-        <property name="url">jdbc:mysql://localhost:3306/vkraftwso2?connectTimeout=3000</property>
+        <property name="url">jdbc:mysql://localhost:3306/wso_db?connectTimeout=3000</property>
         <property name="username">root</property>
         <property name="password">root</property>
     </config>
