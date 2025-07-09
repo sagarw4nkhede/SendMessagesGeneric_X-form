@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<localEntry key="upselling_bh_kci24" xmlns="http://ws.apache.org/ns/synapse"><![CDATA[
+[{ "type": "QUICK_REPLY", "parameter": "Click Here" }]
+]]></localEntry>

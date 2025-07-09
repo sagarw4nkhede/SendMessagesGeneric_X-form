@@ -22,8 +22,6 @@
             <property name="language" expression="json-eval($.language)" scope="default" />
             <property name="templateName" expression="json-eval($.templateName)" scope="default" />
             <property name="cttNumber" expression="json-eval($.cttNumber)" scope="default" />
-            <property name="videoUrl" expression="json-eval($.videoUrl)" scope="default" />
-            <property name="imageUrl" expression="json-eval($.imageUrl)" scope="default" />
             <!-- <property name="placeholders" expression="json-eval($.placeholders)" scope="default" /> -->
             <property name="placeholders" expression="json-eval($.placeholders.*.*)" scope="default" />
             <property name="messageId" expression="json-eval($.messageId)" scope="default" />
@@ -36,7 +34,6 @@
                         <property name="langNotpres" value="in----------"/>
                     </log>
                 </then>
-                <else></else>
             </filter>
 
             <log>
@@ -49,14 +46,10 @@
 
             <property name="notifyUrl" value="https://mytestdomain.loca.lt/callback"/>
             <property name="isButtonsPresent" expression="boolean(string-length(get-property('buttons')) > 0)" />
-            <property name="isImageUrlPresent" expression="boolean(string-length(get-property('imageUrl')) > 0)" />
-            <property name="isVideoUrlPresent" expression="boolean(string-length(get-property('videoUrl')) > 0)" />
             <log>
                 <property name="draft_psa_1a_dual-------" expression="get-property('draft_psa_1a_dual')"/>
                 <property name="buttons-------" expression="get-property('buttons')"/>
                 <property name="isButtonsPresent-------" expression="get-property('isButtonsPresent')"/>
-                <property name="isImageUrlPresent-------" expression="get-property('isImageUrlPresent')"/>
-                <property name="isVideoUrlPresent-------" expression="get-property('isVideoUrlPresent')"/>
             </log>
             <sequence key="processSeq"/>
             <respond/>

@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sequence name="dynamicTemplateMessageBuilder" xmlns="http://ws.apache.org/ns/synapse">
 
-    <!-- Set isImageUrlPresent and isVideoUrlPresent -->
-    <property name="isImageUrlPresent" expression="boolean(get-property('imageUrl'))" scope="default"/>
-    <property name="isVideoUrlPresent" expression="boolean(get-property('videoUrl'))" scope="default"/>
-
-    <!-- Set mediaUrl from videoUrl or imageUrl -->
-    <filter xpath="get-property('isVideoUrlPresent') = 'true'">
-        <then>
-            <property name="mediaUrl" expression="get-property('videoUrl')" scope="default"/>
-            <property name="mediaType" value="VIDEO" scope="default"/>
-        </then>
-        <else>
-            <property name="mediaUrl" expression="get-property('imageUrl')" scope="default"/>
-            <property name="mediaType" value="IMAGE" scope="default"/>
-        </else>
-    </filter>
-
-    <!-- Template-specific condition -->
     <filter xpath="get-property('templateName') = 'updated_psa_kci6_1' or get-property('templateName') = 'updated_psa_kci6_2' or get-property('templateName') = 'updated_bh_psa_kci6_1' or get-property('templateName') = 'updated_bh_psa_kci6_2'">
         <then>
             <script language="js"><![CDATA[
@@ -25,14 +8,15 @@
                 var jsonArray = JSON.parse(phArray);
                 mc.setProperty("ph1", jsonArray[0]);
                 mc.setProperty("ph2", jsonArray[1]);
-            ]]></script>
-
+            ]]>
+            </script>
             <log>
-                <property name="placeholder1" expression="get-property('ph1')"/>
+                <property name="placeholder10" expression="get-property('ph1')"/>
                 <property name="placeholder2" expression="get-property('ph2')"/>
-                <property name="matched template" value="true"/>
+                <property name="then----------" value="inside then kci6_1"></property>
+                <property name="placeholder1------" expression="json-eval($.placeholders[0])" scope="default"/>
+                <property name="placeholder2" expression="json-eval($.placeholders[1])" scope="default"/>
             </log>
-
             <payloadFactory media-type="json" template-type="default">
                 <format>
                     {
@@ -47,12 +31,10 @@
                                         "body": {
                                             "placeholders": $5
                                         },
-                                        "buttons": [
-                                            {
-                                                "type": "QUICK_REPLY",
-                                                "parameter": "Re-Appointment|$10|$8|$9"
-                                            }
-                                        ]
+                                        "buttons": [{
+                                            "type": "QUICK_REPLY",
+                                            "parameter": "Re-Appointment|$10|$8|$9"
+                                        }]
                                     },
                                     "language": "$6"
                                 },
@@ -63,26 +45,29 @@
                     }
                 </format>
                 <args>
-                    <arg expression="get-property('from')"/>
-                    <arg expression="get-property('to')"/>
-                    <arg expression="get-property('messageId')"/>
-                    <arg expression="get-property('templateName')"/>
-                    <arg expression="get-property('placeholders')"/>
-                    <arg expression="get-property('language')"/>
-                    <arg expression="get-property('notifyUrl')"/>
-                    <arg expression="get-property('ph1')"/>
-                    <arg expression="get-property('ph2')"/>
-                    <arg expression="get-property('cttNumber')"/>
+                    <arg expression="get-property('from')" />
+                    <arg expression="get-property('to')" />
+                    <arg expression="get-property('messageId')" />
+                    <arg expression="get-property('templateName')" />
+                    <arg expression="get-property('placeholders')" />
+                    <arg expression="get-property('language')" />
+                    <arg expression="get-property('notifyUrl')" />
+                    <arg expression="get-property('ph1')" />
+                    <arg expression="get-property('ph2')" />
+                    <arg expression="get-property('cttNumber')" />
                 </args>
             </payloadFactory>
+            <log level="full">
+                <property name="final payload to Infobip" value="asas"></property>
+            </log>
         </then>
         <else>
             <filter xpath="get-property('isButtonsPresent') = 'true'">
                 <then>
-                    <filter xpath="get-property('isImageUrlPresent') = 'true' or get-property('isVideoUrlPresent') = 'true'">
+                    <filter xpath="get-property('isImageUrlPresent') = 'true'">
                         <then>
-                            <!-- Buttons + media (image/video) -->
-                            <log><property name="Block" value="Buttons + Media"/></log>
+                            <!-- Payload with buttons and image -->
+                            <log><property name="then--" value="Buttons + ImageUrl block"/></log>
                             <payloadFactory media-type="json" template-type="default">
                                 <format>
                                     {
@@ -97,16 +82,15 @@
                                                         "body": {
                                                             "placeholders": $5
                                                         },
-                                                        "header": {
-                                                            "type": "$6",
-                                                            "mediaUrl": "$7"
-                                                        },
-                                                        "buttons": $8
+                                                        "buttons": $6,
+                                                        "image": {
+                                                            "url": "$7"
+                                                        }
                                                     },
-                                                    "language": "$9"
+                                                    "language": "$8"
                                                 },
                                                 "callbackData": "Callback data from Infobip to Kraft: messageId = $3, templateName = $4",
-                                                "notifyUrl": "$10"
+                                                "notifyUrl": "$9"
                                             }
                                         ]
                                     }
@@ -117,17 +101,16 @@
                                     <arg expression="get-property('messageId')"/>
                                     <arg expression="get-property('templateName')"/>
                                     <arg expression="get-property('placeholders')"/>
-                                    <arg expression="get-property('mediaType')"/>
-                                    <arg expression="get-property('mediaUrl')"/>
                                     <arg expression="get-property('buttons')"/>
+                                    <arg expression="get-property('imageUrl')"/>
                                     <arg expression="get-property('language')"/>
                                     <arg expression="get-property('notifyUrl')"/>
                                 </args>
                             </payloadFactory>
                         </then>
                         <else>
-                            <!-- Buttons only -->
-                            <log><property name="Block" value="Buttons only"/></log>
+                            <!-- Payload with only buttons -->
+                            <log><property name="then--" value="Buttons only block"/></log>
                             <payloadFactory media-type="json" template-type="default">
                                 <format>
                                     {
@@ -167,10 +150,10 @@
                     </filter>
                 </then>
                 <else>
-                    <filter xpath="get-property('isImageUrlPresent') = 'true' or get-property('isVideoUrlPresent') = 'true'">
+                    <filter xpath="get-property('isImageUrlPresent') = 'true'">
                         <then>
-                            <!-- Media (image/video) only -->
-                            <log><property name="Block" value="Media only"/></log>
+                            <!-- Payload with only image -->
+                            <log><property name="then--" value="Image only block"/></log>
                             <payloadFactory media-type="json" template-type="default">
                                 <format>
                                     {
@@ -185,15 +168,14 @@
                                                         "body": {
                                                             "placeholders": $5
                                                         },
-                                                        "header": {
-                                                            "type": "$6",
-                                                            "mediaUrl": "$7"
+                                                        "image": {
+                                                            "url": "$6"
                                                         }
                                                     },
-                                                    "language": "$8"
+                                                    "language": "$7"
                                                 },
                                                 "callbackData": "Callback data from Infobip to Kraft: messageId = $3, templateName = $4",
-                                                "notifyUrl": "$9"
+                                                "notifyUrl": "$8"
                                             }
                                         ]
                                     }
@@ -204,16 +186,15 @@
                                     <arg expression="get-property('messageId')"/>
                                     <arg expression="get-property('templateName')"/>
                                     <arg expression="get-property('placeholders')"/>
-                                    <arg expression="get-property('mediaType')"/>
-                                    <arg expression="get-property('mediaUrl')"/>
+                                    <arg expression="get-property('imageUrl')"/>
                                     <arg expression="get-property('language')"/>
                                     <arg expression="get-property('notifyUrl')"/>
                                 </args>
                             </payloadFactory>
                         </then>
                         <else>
-                            <!-- Only placeholders -->
-                            <log><property name="Block" value="Placeholders only"/></log>
+                            <!-- Payload with only placeholders -->
+                            <log><property name="else--" value="Plain placeholders block"/></log>
                             <payloadFactory media-type="json" template-type="default">
                                 <format>
                                     {
@@ -252,14 +233,12 @@
                 </else>
             </filter>
         </else>
+
     </filter>
 
-    <!-- Final log -->
+    
     <log level="full">
-        <property name="placeholders" expression="get-property('placeholders')"/>
-        <property name="buttons" expression="get-property('buttons')"/>
-        <property name="mediaUrl" expression="get-property('mediaUrl')"/>
-        <property name="mediaType" expression="get-property('mediaType')"/>
+        <property name="Extracted Data-22-------" expression="get-property('placeholders')" />
+        <property name="Extracted buttons--------" expression="get-property('buttons')" />
     </log>
-
 </sequence>
